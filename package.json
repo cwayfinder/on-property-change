@@ -1,0 +1,27 @@
+{
+  "name": "on-property-change",
+  "version": "1.0.0",
+  "description": "A Typescript decorator to watch class properties changes",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/cwayfinder/on-property-change.git"
+  },
+  "keywords": [
+    "typescript",
+    "decorator"
+  ],
+  "author": "Taras Hupalo",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/cwayfinder/on-property-change/issues"
+  },
+  "homepage": "https://github.com/cwayfinder/on-property-change#readme",
+  "devDependencies": {
+    "typescript": "^3.4.5"
+  }
+}
