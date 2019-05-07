@@ -66,8 +66,8 @@ class Person {
   age: number;
 
   @OnPropertyChange({ propNames: ['name'], withMetadata: true })
-  doStuff(change: PropertyChange<string>) {
-      console.log(`User has changed name from ${change.previousValue} to ${change.currentValue}`);
+  doStuff(name: PropertyChange<string>) {
+      console.log(`User has changed name from ${name.previousValue} to ${name.currentValue}`);
       // do stuff
   }
 }
