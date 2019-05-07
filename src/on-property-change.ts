@@ -36,7 +36,7 @@ export function OnPropertyChange(...args: any[]): MethodDecorator {
                     const definedPropNames = Object.keys(this[valuesCacheKey]);
                     const allPropsDefined = config.propNames.every(name => definedPropNames.includes(name));
                     if (allPropsDefined) {
-                        const mapper = config.withMetadata ? p => this[valuesCacheKey][p] : p => this[valuesCacheKey][p].currentValue;
+                        const mapper = config.keepHistory ? p => this[valuesCacheKey][p] : p => this[valuesCacheKey][p].currentValue;
                         const values = config.propNames.map(mapper);
                         target[methodName].call(this, ...values);
                     }
@@ -57,7 +57,7 @@ function normaliseConfig(args: any[]): OnPropertyChangeConfig {
     if (typeof args[0] === 'string') {
         return {
             propNames: args,
-            withMetadata: false,
+            keepHistory: false,
         };
     } else {
         return args[0] as OnPropertyChangeConfig;
