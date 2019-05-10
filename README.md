@@ -12,7 +12,6 @@ npm install on-property-change --save
 ```
 class Person {
   name: string;
-  age: number;
 
   @OnPropertyChange('name')
   doStuff(name: string) {
@@ -63,7 +62,6 @@ The `keepHistory` flag allows you to get the previous value of the property.
 ```
 class Person {
   name: string;
-  age: number;
 
   @OnPropertyChange({ propNames: ['name'], keepHistory: true })
   doStuff(name: PropertyChange<string>) {
@@ -101,7 +99,6 @@ export interface PropertyChange<T> {
 })
 export class PersonCardComponent {
     @Input() name: string;
-    @Input() age: number;
 
     @OnPropertyChange('name')
     doStuff(name: string) {
