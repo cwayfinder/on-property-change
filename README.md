@@ -59,13 +59,13 @@ John is 22 years old
 ```
 
 ### Compare with the previous value
-The `withMetadata` flag allows you to get the previous value of the property.
+The `keepHistory` flag allows you to get the previous value of the property.
 ```
 class Person {
   name: string;
   age: number;
 
-  @OnPropertyChange({ propNames: ['name'], withMetadata: true })
+  @OnPropertyChange({ propNames: ['name'], keepHistory: true })
   doStuff(name: PropertyChange<string>) {
       console.log(`User has changed name from ${name.previousValue} to ${name.currentValue}`);
       // do stuff
