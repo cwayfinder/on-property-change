@@ -13,10 +13,9 @@ npm install on-property-change --save
 class Person {
   name: string;
 
-  @OnPropertyChange('name')
+  @OnPropertyChange('name') 
   doStuff(name: string) {
       console.log(`Name has been changed:`, name);
-      // do stuff
   }
 }
 
@@ -41,7 +40,6 @@ class Person {
   @OnPropertyChange('name', 'age')
   doStuff(name: string, age: number) {
       console.log(`${name} is ${age} years old`);
-      // do stuff
   }
 }
 
@@ -66,7 +64,6 @@ class Person {
   @OnPropertyChange({ propNames: ['name'], keepHistory: true })
   doStuff(name: PropertyChange<string>) {
       console.log(`User has changed name from ${name.previousValue} to ${name.currentValue}`);
-      // do stuff
   }
 }
 
