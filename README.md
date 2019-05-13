@@ -55,6 +55,41 @@ John is 18 years old
 John is 22 years old
 ```
 
+### Listening to multiple properties separately
+You can have multiple decorated methods with any combinations of properties
+```
+class Person {
+  name: string;
+  age: number;
+
+  @OnPropertyChange('name')
+  doStuff(name: string) {
+      console.log('change name')
+  }
+  
+  @OnPropertyChange('age')
+  doStuff2(age: number) {
+      console.log('change age 1')
+  }
+  
+  @OnPropertyChange('age')
+  doStuff3(age: number) {
+      console.log('change age 2')
+  }
+}
+
+const p = new Person();
+p.name = 'John';
+p.age = 18;
+```
+
+##### Console output
+```
+change name
+change age 1
+change age 1
+```
+
 ### Compare with the previous value
 The `keepHistory` flag allows you to get the previous value of the property.
 ```
