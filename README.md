@@ -87,7 +87,7 @@ p.age = 18;
 ```
 change name
 change age 1
-change age 1
+change age 2
 ```
 
 ### Compare with the previous value
