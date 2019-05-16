@@ -4,7 +4,15 @@
     "module": "commonjs",
     "declaration": true,
     "outDir": "./dist",
-    "lib": ["es2018"]
+    "lib": [
+      "dom",
+      "esnext",
+      "es2015"
+    ],
+    "types": [
+      "@types/jest"
+    ],
+    "experimentalDecorators": true
   },
   "include": ["src"],
   "exclude": ["node_modules"]

@@ -1,4 +1,5 @@
-import { OnPropertyChangeConfig } from "./on-property-change-config";
+import { ChangeSensitivityStrategy } from './change-sensitivity-strategy';
+import { OnPropertyChangeConfig } from './on-property-change-config';
 
 export function OnPropertyChange(config: OnPropertyChangeConfig): MethodDecorator;
 export function OnPropertyChange(...propNames: string[]): MethodDecorator;
@@ -18,7 +19,9 @@ export function OnPropertyChange(...args: any[]): MethodDecorator {
 
                     if (this[valuesCacheKey][propName]) {
                         // we don't want to call the callback if previous and current values are equal by reference
-                        if (this[valuesCacheKey][propName].currentValue === value) {
+                        if (this[valuesCacheKey][propName].currentValue === value &&
+                          config.changeSensitivity === ChangeSensitivityStrategy.OnDefined) {
+                            this[valuesCacheKey][propName].previousValue = this[valuesCacheKey][propName].currentValue;
                             return;
                         }
 
@@ -35,10 +38,18 @@ export function OnPropertyChange(...args: any[]): MethodDecorator {
 
                     const definedPropNames = Object.keys(this[valuesCacheKey]);
                     const allPropsDefined = config.propNames.every(name => definedPropNames.includes(name));
-                    if (allPropsDefined) {
+
+                    if (allPropsDefined || config.changeSensitivity === ChangeSensitivityStrategy.Always) {
                         const mapper = config.keepHistory ? p => this[valuesCacheKey][p] : p => this[valuesCacheKey][p].currentValue;
                         const values = config.propNames.map(mapper);
-                        target[methodName].call(this, ...values);
+
+                        if (config.changeSensitivity === ChangeSensitivityStrategy.Bulk) {
+                            if  (allKeysChanged(values)) {
+                                target[methodName].call(this, ...values);
+                            }
+                        } else {
+                            target[methodName].call(this, ...values);
+                        }
                     }
                 },
                 get() {
@@ -57,9 +68,19 @@ function normaliseConfig(args: any[]): OnPropertyChangeConfig {
     if (typeof args[0] === 'string') {
         return {
             propNames: args,
+            changeSensitivity: ChangeSensitivityStrategy.OnDefined,
             keepHistory: false,
         };
     } else {
         return args[0] as OnPropertyChangeConfig;
     }
 }
+
+function checkValuesChange(values: any[]): boolean {
+    return values.every(value => value.currentValue && value.previousValue !== value.currentValue);
+}
+
+function allKeysChanged(values: any[]): boolean {
+    return (values.every(v => !v.firstChange) && checkValuesChange(values)) || values.every(v => v.firstChange);
+}
+
