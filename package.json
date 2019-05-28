@@ -23,13 +23,9 @@
   },
   "homepage": "https://github.com/cwayfinder/on-property-change#readme",
   "devDependencies": {
-    "@babel/core": "^7.4.4",
-    "@babel/plugin-proposal-decorators": "^7.4.4",
-    "@babel/preset-env": "^7.4.4",
-    "@babel/preset-typescript": "^7.3.3",
     "@types/jest": "^24.0.13",
-    "babel-jest": "^24.8.0",
     "jest": "^24.8.0",
+    "ts-jest": "^24.0.2",
     "typescript": "^3.4.5"
   }
 }

@@ -6,8 +6,7 @@
     "outDir": "./dist",
     "lib": [
       "dom",
-      "esnext",
-      "es2015"
+      "esnext"
     ],
     "types": [
       "@types/jest"
