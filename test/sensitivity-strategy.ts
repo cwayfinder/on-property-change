@@ -1,16 +1,16 @@
 import { ChangeSensitivityStrategy, OnPropertyChange, PropertyChange } from '../src';
 
 class Point {
-    public age: number;
-    public name: number;
+    public x: number;
+    public y: number;
 
     @OnPropertyChange({
-        propNames: ['name', 'age'],
+        propNames: ['x', 'y'],
         keepHistory: true,
         changeSensitivity: ChangeSensitivityStrategy.Bulk,
     })
-    public onNameChange(name: PropertyChange<number>, age: PropertyChange<number>): void {
-        console.log(name.currentValue, age.currentValue);
+    public onCoordinatesChange(x: PropertyChange<number>, y: PropertyChange<number>): void {
+        console.log(x.currentValue, y.currentValue);
     }
 }
 
@@ -27,15 +27,15 @@ describe('Sensitivity strategies', () => {
         it('should call decorated method only when all properties changed', () => {
             expect(spy).not.toHaveBeenCalled();
 
-            point.name = 10;
-            point.age = 10;
+            point.y = 10;
+            point.x = 10;
             expect(spy).toHaveBeenCalledWith(10, 10);
             expect(spy).toHaveBeenCalledTimes(1);
 
-            point.name = 15;
+            point.y = 15;
             expect(spy).toHaveBeenCalledTimes(1);
 
-            point.age = 15;
+            point.x = 15;
             expect(spy).toHaveBeenCalledWith(15, 15);
             expect(spy).toHaveBeenCalledTimes(2);
         });
