@@ -12,12 +12,10 @@ npm install on-property-change --save
 ```
 class Person {
   name: string;
-  age: number;
 
-  @OnPropertyChange('name')
+  @OnPropertyChange('name') 
   doStuff(name: string) {
       console.log(`Name has been changed:`, name);
-      // do stuff
   }
 }
 
@@ -42,7 +40,6 @@ class Person {
   @OnPropertyChange('name', 'age')
   doStuff(name: string, age: number) {
       console.log(`${name} is ${age} years old`);
-      // do stuff
   }
 }
 
@@ -58,17 +55,50 @@ John is 18 years old
 John is 22 years old
 ```
 
-### Compare with the previous value
-The `withMetadata` flag allows you to get the previous value of the property.
+### Listening to multiple properties separately
+You can have multiple decorated methods with any combinations of properties
 ```
 class Person {
   name: string;
   age: number;
 
-  @OnPropertyChange({ propNames: ['name'], withMetadata: true })
+  @OnPropertyChange('name')
+  doStuff(name: string) {
+      console.log('change name')
+  }
+  
+  @OnPropertyChange('age')
+  doStuff2(age: number) {
+      console.log('change age 1')
+  }
+  
+  @OnPropertyChange('age')
+  doStuff3(age: number) {
+      console.log('change age 2')
+  }
+}
+
+const p = new Person();
+p.name = 'John';
+p.age = 18;
+```
+
+##### Console output
+```
+change name
+change age 1
+change age 2
+```
+
+### Compare with the previous value
+The `keepHistory` flag allows you to get the previous value of the property.
+```
+class Person {
+  name: string;
+
+  @OnPropertyChange({ propNames: ['name'], keepHistory: true })
   doStuff(name: PropertyChange<string>) {
       console.log(`User has changed name from ${name.previousValue} to ${name.currentValue}`);
-      // do stuff
   }
 }
 
@@ -101,7 +131,6 @@ export interface PropertyChange<T> {
 })
 export class PersonCardComponent {
     @Input() name: string;
-    @Input() age: number;
 
     @OnPropertyChange('name')
     doStuff(name: string) {
