@@ -74,12 +74,12 @@ function updateValueCache(instance, propName, value) {
 }
 
 function shouldCallTargetMethod(clazz: any, instance: any, methodName: PropertyKey, config: OnPropertyChangeConfig): boolean {
-    const definedPropNames = Object.keys(instance[valuesCacheKey]);
-    const allPropsDefined = config.propNames.every(name => definedPropNames.includes(name));
+    const allPropsDefined = config.propNames.every(name => name in instance[valuesCacheKey]);
     if (allPropsDefined) {
         if (config.bulk) {
-            const neverCalled = !instance[lastCallKey][methodName];
-            return neverCalled || config.propNames.every(p => instance[valuesCacheKey][p].currentValue !== instance[lastCallKey][methodName][p]);
+            const valueMap = getValueMap(instance, config.propNames);
+            const lastCallValueMap = getLastCallValueMap(instance, methodName);
+            return !lastCallValueMap || distinctProps(valueMap, lastCallValueMap);
         }
         return true;
     }
@@ -88,11 +88,24 @@ function shouldCallTargetMethod(clazz: any, instance: any, methodName: PropertyK
 }
 
 function callTargetMethod(clazz: any, instance: any, methodName: PropertyKey, config: OnPropertyChangeConfig): void {
-    const valueMap = instance[valuesCacheKey];
-    const mapper = config.keepHistory ? p => valueMap[p] : p => valueMap[p].currentValue;
-    const values = config.propNames.map(mapper);
+    const map = config.keepHistory ? getChangeMap(instance, config.propNames) : getValueMap(instance, config.propNames);
+    clazz[methodName].call(instance, ...Object.values(map));
 
-    clazz[methodName].call(instance, ...values);
+    instance[lastCallKey][methodName] = getValueMap(instance, config.propNames);
+}
 
-    instance[lastCallKey][methodName] = config.propNames.reduce((obj, p) => ({ ...obj, [p]: valueMap[p].currentValue }), {});
+function getChangeMap(instance: any, propNames: PropertyKey[]) {
+    return propNames.reduce((obj, p) => ({ ...obj, [p]: instance[valuesCacheKey][p] }), {});
+}
+
+function getValueMap(instance: any, propNames: PropertyKey[]) {
+    return propNames.reduce((obj, p) => ({ ...obj, [p]: instance[valuesCacheKey][p].currentValue }), {});
+}
+
+function getLastCallValueMap(instance: any, methodName: PropertyKey) {
+    return instance[lastCallKey][methodName];
+}
+
+function distinctProps(a: object, b: object): boolean {
+    return Object.keys(a).every(key => a[key] !== b[key]);
 }
