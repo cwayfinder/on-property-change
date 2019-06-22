@@ -1,4 +1,4 @@
-import { ChangeSensitivityStrategy, OnPropertyChange, PropertyChange } from '../src';
+import { OnPropertyChange } from '../src';
 import SpyInstance = jest.SpyInstance;
 
 class Person {
@@ -23,10 +23,10 @@ describe('SingleProperty', () => {
     it('should call decorated method on each property change', () => {
         expect(spy).not.toHaveBeenCalled();
 
-        person.name = 'First';
-        expect(spy).toHaveBeenCalledWith('First');
+        person.name = 'Mark';
+        expect(spy).toHaveBeenCalledWith('Mark');
 
-        person.name = 'Change';
-        expect(spy).toHaveBeenCalledWith('Change');
+        person.name = 'John';
+        expect(spy).toHaveBeenCalledWith('John');
     });
 });

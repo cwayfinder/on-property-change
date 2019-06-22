@@ -54,7 +54,7 @@ John is 18 years old
 John is 22 years old
 ```
 ####  Bulk properties change
-It is possible to call  method only when all properies are  changed
+It is possible to call the method only when all the properties have changed
 ```
 class Person {
   public age: number;
@@ -62,10 +62,9 @@ class Person {
 
   @OnPropertyChange({
     propNames: ['name', 'age'],
-    keepHistory: true,
-    changeSensitivity: ChangeSensitivityStrategy.Bulk,
+    bulk: true,
   })
-  public doStuff(name: PropertyChange<string>, age: PropertyChange<number>): void {
+  public doStuff(name: string, age: number): void {
     console.log(`${name} is ${age} years old`);
   }
 }
@@ -75,7 +74,7 @@ const p = new Person();
 # 'doStuff' is not triggered
 p.name = 'John';
 
-# after this change it will be triggered
+# 'doStuff' is triggered now
 p.age = 18;
 
 # 'doStuff' is not triggered

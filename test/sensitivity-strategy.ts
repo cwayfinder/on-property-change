@@ -1,16 +1,12 @@
-import { ChangeSensitivityStrategy, OnPropertyChange, PropertyChange } from '../src';
+import { OnPropertyChange } from '../src';
 
 class Point {
     public x: number;
     public y: number;
 
-    @OnPropertyChange({
-        propNames: ['x', 'y'],
-        keepHistory: true,
-        changeSensitivity: ChangeSensitivityStrategy.Bulk,
-    })
-    public onCoordinatesChange(x: PropertyChange<number>, y: PropertyChange<number>): void {
-        console.log(x.currentValue, y.currentValue);
+    @OnPropertyChange({ propNames: ['x', 'y'], bulk: true })
+    public onCoordinatesChange(x, y): void {
+        console.log(x, y);
     }
 }
 
