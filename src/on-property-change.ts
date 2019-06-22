@@ -46,7 +46,8 @@ export function OnPropertyChange(...args: any[]): MethodDecorator {
                     if (originalDescriptor) {
                         return originalDescriptor.get.call(this);
                     } else {
-                        return this[valuesCacheKey][propName].currentValue;
+                        const cache = this[valuesCacheKey] && this[valuesCacheKey][propName];
+                        return cache ? cache.currentValue : undefined;
                     }
                 },
             });
