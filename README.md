@@ -13,7 +13,7 @@ npm install on-property-change --save
 class Person {
   name: string;
 
-  @OnPropertyChange('name') 
+  @OnPropertyChange('name')
   doStuff(name: string) {
       console.log(`Name has been changed:`, name);
   }
@@ -34,11 +34,11 @@ Name has been changed: Kyle
 The `doStuff` method is called after both properties are initialised
 ```
 class Person {
-  name: string;
-  age: number;
+  public name: string;
+  public age: number;
 
   @OnPropertyChange('name', 'age')
-  doStuff(name: string, age: number) {
+  public doStuff(name: string, age: number) {
       console.log(`${name} is ${age} years old`);
   }
 }
@@ -48,13 +48,42 @@ p.name = 'John';
 p.age = 18;
 p.age = 22;
 ```
-
 ##### Console output
 ```
 John is 18 years old
 John is 22 years old
 ```
+####  Bulk properties change
+It is possible to call the method only when all the properties have changed
+```
+class Person {
+  public age: number;
+  public name: string;
 
+  @OnPropertyChange({
+    propNames: ['name', 'age'],
+    bulk: true,
+  })
+  public doStuff(name: string, age: number): void {
+    console.log(`${name} is ${age} years old`);
+  }
+}
+
+const p = new Person();
+
+# 'doStuff' is not triggered
+p.name = 'John';
+
+# 'doStuff' is triggered now
+p.age = 18;
+
+# 'doStuff' is not triggered
+p.age = 22;
+```
+##### Console output
+```
+John is 18 years old
+```
 ### Listening to multiple properties separately
 You can have multiple decorated methods with any combinations of properties
 ```
@@ -66,12 +95,12 @@ class Person {
   doStuff(name: string) {
       console.log('change name')
   }
-  
+
   @OnPropertyChange('age')
   doStuff2(age: number) {
       console.log('change age 1')
   }
-  
+
   @OnPropertyChange('age')
   doStuff3(age: number) {
       console.log('change age 2')
