@@ -8,45 +8,30 @@ export function OnPropertyChange(...propNames: string[]): MethodDecorator;
 export function OnPropertyChange(...args: any[]): MethodDecorator {
     const config = normaliseConfig(args);
 
-    return (target: any, methodName: PropertyKey): void => {
-        for (const propName of config.propNames) {
-            const originalDescriptor = Object.getOwnPropertyDescriptor(target, propName);
+    return (clazz: any, methodName: PropertyKey): void => {
+        for (const propertyName of config.propNames) {
+            const originalDescriptor = Object.getOwnPropertyDescriptor(clazz, propertyName);
 
-            Object.defineProperty(target, propName, {
+            Object.defineProperty(clazz, propertyName, {
                 set(value) {
-                    if (!this[valuesCacheKey]) {
-                        this[valuesCacheKey] = {};
-                    }
-                    if (!this[lastCallKey]) {
-                        this[lastCallKey] = {};
-                    }
+                    const instance = this;
+                    ensureHiddenProps(instance);
+                    updateValueCache(instance, propertyName, value);
 
-                    if (this[valuesCacheKey][propName]) {
-                        // we don't want to call the callback if previous and current values are equal by reference
-                        if (this[valuesCacheKey][propName].currentValue === value) {
-                            return;
-                        }
-
-                        this[valuesCacheKey][propName].firstChange = false;
-                    } else {
-                        this[valuesCacheKey][propName] = { firstChange: true };
-                    }
-
-                    this[valuesCacheKey][propName].previousValue = this[valuesCacheKey][propName].currentValue;
                     if (originalDescriptor) {
-                        originalDescriptor.set.call(this, value);
+                        originalDescriptor.set.call(instance, value);
                     }
-                    this[valuesCacheKey][propName].currentValue = value;
 
-                    if (shouldCallTargetMethod(target, this, methodName, config)) {
-                        callTargetMethod(target, this, methodName, config);
+                    if (shouldCallTargetMethod(clazz, instance, methodName, config)) {
+                        callTargetMethod(clazz, instance, methodName, config);
                     }
                 },
                 get() {
+                    const instance = this;
                     if (originalDescriptor) {
-                        return originalDescriptor.get.call(this);
+                        return originalDescriptor.get.call(instance);
                     } else {
-                        const cache = this[valuesCacheKey] && this[valuesCacheKey][propName];
+                        const cache = instance[valuesCacheKey] && instance[valuesCacheKey][propertyName];
                         return cache ? cache.currentValue : undefined;
                     }
                 },
@@ -65,6 +50,27 @@ function normaliseConfig(args: any[]): OnPropertyChangeConfig {
     } else {
         return args[0] as OnPropertyChangeConfig;
     }
+}
+
+function ensureHiddenProps(instance) {
+    if (!instance[valuesCacheKey]) {
+        instance[valuesCacheKey] = {};
+    }
+    if (!instance[lastCallKey]) {
+        instance[lastCallKey] = {};
+    }
+}
+
+function updateValueCache(instance, propName, value) {
+    if (instance[valuesCacheKey][propName]) {
+        instance[valuesCacheKey][propName].firstChange = false;
+    } else {
+        instance[valuesCacheKey][propName] = { firstChange: true };
+    }
+
+    const cache = instance[valuesCacheKey][propName];
+    cache.previousValue = cache.currentValue;
+    cache.currentValue = value;
 }
 
 function shouldCallTargetMethod(clazz: any, instance: any, methodName: PropertyKey, config: OnPropertyChangeConfig): boolean {
