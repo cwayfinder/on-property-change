@@ -4,7 +4,7 @@ class Point {
     public x: number;
     public y: number;
 
-    @OnPropertyChange({ propNames: ['x', 'y'], bulk: true })
+    @OnPropertyChange({ props: ['x', 'y'], bulk: true })
     public onCoordinatesChange(x, y): void {
         console.log(x, y);
     }

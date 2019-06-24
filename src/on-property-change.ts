@@ -9,7 +9,7 @@ export function OnPropertyChange(...args: any[]): MethodDecorator {
     const config = normaliseConfig(args);
 
     return (clazz: any, methodName: PropertyKey): void => {
-        for (const propertyName of config.propNames) {
+        for (const propertyName of config.props) {
             const originalDescriptor = Object.getOwnPropertyDescriptor(clazz, propertyName);
 
             Object.defineProperty(clazz, propertyName, {
@@ -43,7 +43,7 @@ export function OnPropertyChange(...args: any[]): MethodDecorator {
 function normaliseConfig(args: any[]): OnPropertyChangeConfig {
     if (typeof args[0] === 'string') {
         return {
-            propNames: args,
+            props: args,
             bulk: false,
             history: false,
         };
@@ -75,11 +75,11 @@ function updateValueCache(instance, propName, value) {
 
 function shouldCallTargetMethod(clazz: any, instance: any, methodName: PropertyKey, config: OnPropertyChangeConfig): boolean {
     const definedPropNames = Object.keys(instance[valuesCacheKey]);
-    const allPropsDefined = config.propNames.every(name => definedPropNames.includes(name));
+    const allPropsDefined = config.props.every(name => definedPropNames.includes(name));
     if (allPropsDefined) {
         if (config.bulk) {
             const neverCalled = !instance[lastCallKey][methodName];
-            return neverCalled || config.propNames.every(p => instance[valuesCacheKey][p].currentValue !== instance[lastCallKey][methodName][p]);
+            return neverCalled || config.props.every(p => instance[valuesCacheKey][p].currentValue !== instance[lastCallKey][methodName][p]);
         }
         return true;
     }
@@ -90,9 +90,9 @@ function shouldCallTargetMethod(clazz: any, instance: any, methodName: PropertyK
 function callTargetMethod(clazz: any, instance: any, methodName: PropertyKey, config: OnPropertyChangeConfig): void {
     const valueMap = instance[valuesCacheKey];
     const mapper = config.history ? p => valueMap[p] : p => valueMap[p].currentValue;
-    const values = config.propNames.map(mapper);
+    const values = config.props.map(mapper);
 
     clazz[methodName].call(instance, ...values);
 
-    instance[lastCallKey][methodName] = config.propNames.reduce((obj, p) => ({ ...obj, [p]: valueMap[p].currentValue }), {});
+    instance[lastCallKey][methodName] = config.props.reduce((obj, p) => ({ ...obj, [p]: valueMap[p].currentValue }), {});
 }

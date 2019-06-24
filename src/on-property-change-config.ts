@@ -1,5 +1,5 @@
 export interface OnPropertyChangeConfig {
-    propNames: string[];
+    props: string[];
     history?: boolean;
     bulk?: boolean;
 }

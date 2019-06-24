@@ -64,7 +64,7 @@ class Point {
   public x: number;
   public y: number;
 
-  @OnPropertyChange({ propNames: ['x', 'y'], bulk: true })
+  @OnPropertyChange({ props: ['x', 'y'], bulk: true })
   public move(): void {
     console.log(`Move to ${this.x}:${this.y}`);
   }
@@ -141,7 +141,7 @@ The `history` flag allows you to get the previous value of the property.
 class Person {
   name: string;
 
-  @OnPropertyChange({ propNames: ['name'], history: true })
+  @OnPropertyChange({ props: ['name'], history: true })
   doStuff(name: PropertyChange<string>) {
       console.log(`User has changed name from ${name.previousValue} to ${name.currentValue}`);
   }
