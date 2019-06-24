@@ -16,7 +16,8 @@
     "typescript",
     "decorator"
   ],
-  "author": "Taras Hupalo",
+  "author": "Taras Hupalo <taras.hupalo@gmail.com>",
+  "contributors": ["Roman Kysenko <romakiro@gmail.com>"],
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/cwayfinder/on-property-change/issues"
