@@ -122,7 +122,7 @@ change age 2
 ```
 
 ### Optional method arguments
-The `doStuff` method might have arguments. They are the same values as the class fields.
+The `doStuff` method can have arguments. They are the same values as the class fields.
 ```
 class Person {
   public name: string;
