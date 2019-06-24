@@ -1,6 +1,6 @@
 {
   "name": "on-property-change",
-  "version": "2.0.1",
+  "version": "2.0.2",
   "description": "A Typescript decorator to watch class properties changes",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -17,7 +17,9 @@
     "decorator"
   ],
   "author": "Taras Hupalo <taras.hupalo@gmail.com>",
-  "contributors": ["Roman Kysenko <romakiro@gmail.com>"],
+  "contributors": [
+    "Roman Kysenko <romakiro@gmail.com>"
+  ],
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/cwayfinder/on-property-change/issues"
