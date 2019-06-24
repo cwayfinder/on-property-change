@@ -88,18 +88,18 @@ function shouldCallTargetMethod(clazz: any, instance: any, methodName: PropertyK
 }
 
 function callTargetMethod(clazz: any, instance: any, methodName: PropertyKey, config: OnPropertyChangeConfig): void {
-    const map = config.keepHistory ? getChangeMap(instance, config.propNames) : getValueMap(instance, config.propNames);
-    clazz[methodName].call(instance, ...Object.values(map));
+    const values = Object.values(getValueMap(instance, config.propNames, config.keepHistory));
+    clazz[methodName].call(instance, ...values);
 
     instance[lastCallKey][methodName] = getValueMap(instance, config.propNames);
 }
 
-function getChangeMap(instance: any, propNames: PropertyKey[]) {
-    return propNames.reduce((obj, p) => ({ ...obj, [p]: instance[valuesCacheKey][p] }), {});
-}
-
-function getValueMap(instance: any, propNames: PropertyKey[]) {
-    return propNames.reduce((obj, p) => ({ ...obj, [p]: instance[valuesCacheKey][p].currentValue }), {});
+function getValueMap(instance: any, propNames: PropertyKey[], history: boolean = false) {
+    const cache = instance[valuesCacheKey];
+    return propNames.reduce((obj, p) => {
+        const value = history ? cache[p] : cache[p].currentValue;
+        return ({ ...obj, [p]: value });
+    }, {});
 }
 
 function getLastCallValueMap(instance: any, methodName: PropertyKey) {
