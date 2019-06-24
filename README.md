@@ -136,12 +136,12 @@ class Person {
 ```
 
 ### Compare with the previous value
-The `keepHistory` flag allows you to get the previous value of the property.
+The `history` flag allows you to get the previous value of the property.
 ```
 class Person {
   name: string;
 
-  @OnPropertyChange({ propNames: ['name'], keepHistory: true })
+  @OnPropertyChange({ propNames: ['name'], history: true })
   doStuff(name: PropertyChange<string>) {
       console.log(`User has changed name from ${name.previousValue} to ${name.currentValue}`);
   }

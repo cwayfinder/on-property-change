@@ -45,7 +45,7 @@ function normaliseConfig(args: any[]): OnPropertyChangeConfig {
         return {
             propNames: args,
             bulk: false,
-            keepHistory: false,
+            history: false,
         };
     } else {
         return args[0] as OnPropertyChangeConfig;
@@ -89,7 +89,7 @@ function shouldCallTargetMethod(clazz: any, instance: any, methodName: PropertyK
 
 function callTargetMethod(clazz: any, instance: any, methodName: PropertyKey, config: OnPropertyChangeConfig): void {
     const valueMap = instance[valuesCacheKey];
-    const mapper = config.keepHistory ? p => valueMap[p] : p => valueMap[p].currentValue;
+    const mapper = config.history ? p => valueMap[p] : p => valueMap[p].currentValue;
     const values = config.propNames.map(mapper);
 
     clazz[methodName].call(instance, ...values);
