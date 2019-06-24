@@ -1,7 +1,7 @@
 # @OnPropertyChange
 A Typescript decorator to watch class properties changes
 
-## Instalation
+## Installation
 ```
 npm install on-property-change --save
 ```
@@ -14,8 +14,8 @@ class Person {
   name: string;
 
   @OnPropertyChange('name')
-  doStuff(name: string) {
-      console.log(`Name has been changed:`, name);
+  doStuff() {
+      console.log(`Name has been changed:`, this.name);
   }
 }
 
@@ -38,8 +38,8 @@ class Person {
   public age: number;
 
   @OnPropertyChange('name', 'age')
-  public doStuff(name: string, age: number) {
-      console.log(`${name} is ${age} years old`);
+  public doStuff() {
+      console.log(`${this.name} is ${this.age} years old`);
   }
 }
 
@@ -53,36 +53,30 @@ p.age = 22;
 John is 18 years old
 John is 22 years old
 ```
-####  Bulk properties change
-It is possible to call the method only when all the properties have changed
+####  Bulk change
+It is possible to call the method only when **all the properties** have changed
 ```
-class Person {
-  public age: number;
-  public name: string;
+class Point {
+  public x: number;
+  public y: number;
 
-  @OnPropertyChange({
-    propNames: ['name', 'age'],
-    bulk: true,
-  })
-  public doStuff(name: string, age: number): void {
-    console.log(`${name} is ${age} years old`);
+  @OnPropertyChange({ propNames: ['x', 'y'], bulk: true })
+  public move(): void {
+    console.log(`Move to ${this.x}:${this.y}`);
   }
 }
 
-const p = new Person();
-
-# 'doStuff' is not triggered
-p.name = 'John';
-
-# 'doStuff' is triggered now
-p.age = 18;
-
-# 'doStuff' is not triggered
-p.age = 22;
+const p = new Point();
+p.x = '5';
+p.x = '3';  
+p.y = 8;   // Move to 3:8
+p.y = 16;
+p.x = 10;  // Move to 10:16
 ```
 ##### Console output
 ```
-John is 18 years old
+Move to 3:8
+Move to 10:16
 ```
 ### Listening to multiple properties separately
 You can have multiple decorated methods with any combinations of properties
@@ -92,17 +86,17 @@ class Person {
   age: number;
 
   @OnPropertyChange('name')
-  doStuff(name: string) {
+  doStuff() {
       console.log('change name')
   }
 
   @OnPropertyChange('age')
-  doStuff2(age: number) {
+  doStuff2() {
       console.log('change age 1')
   }
 
   @OnPropertyChange('age')
-  doStuff3(age: number) {
+  doStuff3() {
       console.log('change age 2')
   }
 }
@@ -117,6 +111,20 @@ p.age = 18;
 change name
 change age 1
 change age 2
+```
+
+### Optional method arguments
+The `doStuff` method might have arguments. They are the same values as the class fields.
+```
+class Person {
+  public name: string;
+  public age: number;
+
+  @OnPropertyChange('name', 'age')
+  public doStuff(name: string, age: number) {
+      console.log(`${name} is ${age} years old`);
+  }
+}
 ```
 
 ### Compare with the previous value
@@ -162,7 +170,7 @@ export class PersonCardComponent {
     @Input() name: string;
 
     @OnPropertyChange('name')
-    doStuff(name: string) {
+    doStuff() {
         // do stuff
     }
 }
