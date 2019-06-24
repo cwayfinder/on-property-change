@@ -6,7 +6,7 @@ A Typescript decorator to watch class properties changes
 npm install on-property-change --save
 ```
 
-## Usage
+## Examples
 
 ### Listening to a single property
 ```
@@ -18,7 +18,9 @@ class Person {
       console.log(`Name has been changed:`, this.name);
   }
 }
-
+```
+##### Usage
+```
 const p = new Person();
 p.name = 'John';
 p.name = 'Kyle';
@@ -42,7 +44,9 @@ class Person {
       console.log(`${this.name} is ${this.age} years old`);
   }
 }
-
+```
+##### Usage
+```
 const p = new Person();
 p.name = 'John';
 p.age = 18;
@@ -65,7 +69,9 @@ class Point {
     console.log(`Move to ${this.x}:${this.y}`);
   }
 }
-
+```
+##### Usage
+```
 const p = new Point();
 p.x = '5';
 p.x = '3';  
@@ -100,7 +106,9 @@ class Person {
       console.log('change age 2')
   }
 }
-
+```
+##### Usage
+```
 const p = new Person();
 p.name = 'John';
 p.age = 18;
@@ -138,7 +146,9 @@ class Person {
       console.log(`User has changed name from ${name.previousValue} to ${name.currentValue}`);
   }
 }
-
+```
+##### Usage
+```
 const p = new Person();
 p.name = 'John';
 p.name = 'Kyle';
