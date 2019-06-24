@@ -39,7 +39,7 @@ class Person {
   public name: string;
   public age: number;
 
-  @OnPropertyChange('name', 'age')
+  @OnPropertyChange(['name', 'age'])
   public doStuff() {
       console.log(`${this.name} is ${this.age} years old`);
   }
@@ -128,7 +128,7 @@ class Person {
   public name: string;
   public age: number;
 
-  @OnPropertyChange('name', 'age')
+  @OnPropertyChange(['name', 'age'])
   public doStuff(name: string, age: number) {
       console.log(`${name} is ${age} years old`);
   }
