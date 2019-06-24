@@ -58,13 +58,13 @@ John is 18 years old
 John is 22 years old
 ```
 ####  Bulk change
-It is possible to call the method only when **all the properties** have changed
+The `bulk` flag means to call the method only when **all the properties** have changed
 ```
 class Point {
   public x: number;
   public y: number;
 
-  @OnPropertyChange({ props: ['x', 'y'], bulk: true })
+  @OnPropertyChange(['x', 'y'], { bulk: true })
   public move(): void {
     console.log(`Move to ${this.x}:${this.y}`);
   }
@@ -141,7 +141,7 @@ The `history` flag allows you to get the previous value of the property.
 class Person {
   name: string;
 
-  @OnPropertyChange({ props: ['name'], history: true })
+  @OnPropertyChange('name', { history: true })
   doStuff(name: PropertyChange<string>) {
       console.log(`User has changed name from ${name.previousValue} to ${name.currentValue}`);
   }

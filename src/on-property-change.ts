@@ -3,13 +3,16 @@ import { OnPropertyChangeConfig } from "./on-property-change-config";
 const valuesCacheKey = Symbol();
 const lastCallKey = Symbol();
 
-export function OnPropertyChange(config: OnPropertyChangeConfig): MethodDecorator;
-export function OnPropertyChange(...propNames: string[]): MethodDecorator;
-export function OnPropertyChange(...args: any[]): MethodDecorator {
-    const config = normaliseConfig(args);
+const defaultConfig = {
+    bulk: false,
+    history: false,
+};
+
+export function OnPropertyChange(props: string | string[], config: OnPropertyChangeConfig = defaultConfig): MethodDecorator {
+    const propertyNames = normaliseProps(props);
 
     return (clazz: any, methodName: PropertyKey): void => {
-        for (const propertyName of config.props) {
+        for (const propertyName of propertyNames) {
             const originalDescriptor = Object.getOwnPropertyDescriptor(clazz, propertyName);
 
             Object.defineProperty(clazz, propertyName, {
@@ -22,8 +25,8 @@ export function OnPropertyChange(...args: any[]): MethodDecorator {
                         originalDescriptor.set.call(instance, value);
                     }
 
-                    if (shouldCallTargetMethod(clazz, instance, methodName, config)) {
-                        callTargetMethod(clazz, instance, methodName, config);
+                    if (shouldCallTargetMethod(clazz, instance, methodName, propertyNames, config)) {
+                        callTargetMethod(clazz, instance, methodName, propertyNames, config);
                     }
                 },
                 get() {
@@ -40,15 +43,11 @@ export function OnPropertyChange(...args: any[]): MethodDecorator {
     };
 }
 
-function normaliseConfig(args: any[]): OnPropertyChangeConfig {
-    if (typeof args[0] === 'string') {
-        return {
-            props: args,
-            bulk: false,
-            history: false,
-        };
+function normaliseProps(props: string | string[]): string[] {
+    if (Array.isArray(props)) {
+        return props as unknown as string[];
     } else {
-        return args[0] as OnPropertyChangeConfig;
+        return [props as unknown as string];
     }
 }
 
@@ -73,13 +72,13 @@ function updateValueCache(instance, propName, value) {
     cache.currentValue = value;
 }
 
-function shouldCallTargetMethod(clazz: any, instance: any, methodName: PropertyKey, config: OnPropertyChangeConfig): boolean {
+function shouldCallTargetMethod(clazz: any, instance: any, methodName: PropertyKey, props: string[], config: OnPropertyChangeConfig): boolean {
     const definedPropNames = Object.keys(instance[valuesCacheKey]);
-    const allPropsDefined = config.props.every(name => definedPropNames.includes(name));
+    const allPropsDefined = props.every(name => definedPropNames.includes(name));
     if (allPropsDefined) {
         if (config.bulk) {
             const neverCalled = !instance[lastCallKey][methodName];
-            return neverCalled || config.props.every(p => instance[valuesCacheKey][p].currentValue !== instance[lastCallKey][methodName][p]);
+            return neverCalled || props.every(p => instance[valuesCacheKey][p].currentValue !== instance[lastCallKey][methodName][p]);
         }
         return true;
     }
@@ -87,12 +86,12 @@ function shouldCallTargetMethod(clazz: any, instance: any, methodName: PropertyK
     return false;
 }
 
-function callTargetMethod(clazz: any, instance: any, methodName: PropertyKey, config: OnPropertyChangeConfig): void {
+function callTargetMethod(clazz: any, instance: any, methodName: PropertyKey, props: string[], config: OnPropertyChangeConfig): void {
     const valueMap = instance[valuesCacheKey];
     const mapper = config.history ? p => valueMap[p] : p => valueMap[p].currentValue;
-    const values = config.props.map(mapper);
+    const values = props.map(mapper);
 
     clazz[methodName].call(instance, ...values);
 
-    instance[lastCallKey][methodName] = config.props.reduce((obj, p) => ({ ...obj, [p]: valueMap[p].currentValue }), {});
+    instance[lastCallKey][methodName] = props.reduce((obj, p) => ({ ...obj, [p]: valueMap[p].currentValue }), {});
 }
