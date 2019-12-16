@@ -1,10 +1,10 @@
-import { OnPropertyChange } from '../src';
+import { OnChange } from '../src';
 import SpyInstance = jest.SpyInstance;
 
 class Person {
     name: string;
 
-    @OnPropertyChange('name')
+    @OnChange('name')
     renamed(name: string): void {
         console.log(name);
     }

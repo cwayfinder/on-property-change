@@ -43,6 +43,8 @@ export function OnPropertyChange(props: string | string[], config: OnPropertyCha
     };
 }
 
+export const OnChange = OnPropertyChange;
+
 function normaliseProps(props: string | string[]): string[] {
     if (Array.isArray(props)) {
         return props as unknown as string[];
