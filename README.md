@@ -8,8 +8,8 @@ npm install on-property-change --save
 
 ## Examples
 
-### Listening to a single property
-```
+### Listening to a property changes
+```ts
 class Person {
   name: string;
 
@@ -20,7 +20,7 @@ class Person {
 }
 ```
 ##### Usage
-```
+```ts
 const p = new Person();
 p.name = 'John';
 p.name = 'Kyle';
@@ -32,9 +32,9 @@ Name has been changed: John
 Name has been changed: Kyle
 ```
 
-### Listening to multiple properties
+### Listening to multiple properties changes
 The `doStuff` method is called after both properties are initialised
-```
+```ts
 class Person {
   public name: string;
   public age: number;
@@ -46,7 +46,7 @@ class Person {
 }
 ```
 ##### Usage
-```
+```ts
 const p = new Person();
 p.name = 'John';
 p.age = 18;
@@ -59,7 +59,7 @@ John is 22 years old
 ```
 ####  Bulk change
 The `bulk` flag means to call the method only when **all the properties** have changed
-```
+```ts
 class Point {
   public x: number;
   public y: number;
@@ -71,7 +71,7 @@ class Point {
 }
 ```
 ##### Usage
-```
+```ts
 const p = new Point();
 p.x = '5';
 p.x = '3';  
@@ -86,7 +86,7 @@ Move to 10:16
 ```
 ### Listening to multiple properties separately
 You can have multiple decorated methods with any combinations of properties
-```
+```ts
 class Person {
   name: string;
   age: number;
@@ -108,7 +108,7 @@ class Person {
 }
 ```
 ##### Usage
-```
+```ts
 const p = new Person();
 p.name = 'John';
 p.age = 18;
@@ -123,7 +123,7 @@ change age 2
 
 ### Optional method arguments
 The `doStuff` method can have arguments. They are the same values as the class fields.
-```
+```ts
 class Person {
   public name: string;
   public age: number;
@@ -137,7 +137,7 @@ class Person {
 
 ### Compare with the previous value
 The `history` flag allows you to get the previous value of the property.
-```
+```ts
 class Person {
   name: string;
 
@@ -148,7 +148,7 @@ class Person {
 }
 ```
 ##### Usage
-```
+```ts
 const p = new Person();
 p.name = 'John';
 p.name = 'Kyle';
@@ -161,7 +161,7 @@ User has changed name from John to Kyle
 ```
 
 The full metadata looks like this:
-```
+```ts
 export interface PropertyChange<T> {
     firstChange: boolean;
     previousValue: T;
@@ -170,7 +170,7 @@ export interface PropertyChange<T> {
 ```
 
 ### As a replacement for `ngOnChanges` in Angular projects
-```
+```ts
 @Component({
     selector: 'app-person-card',
     templateUrl: './person-card.component.html',
