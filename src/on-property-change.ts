@@ -8,7 +8,7 @@ const defaultConfig = {
     history: false,
 };
 
-export function OnPropertyChange(props: string | string[], config: OnPropertyChangeConfig = defaultConfig): MethodDecorator {
+export function OnChange(props: string | string[], config: OnPropertyChangeConfig = defaultConfig): MethodDecorator {
     const propertyNames = normaliseProps(props);
 
     return (clazz: any, methodName: PropertyKey): void => {
@@ -43,7 +43,8 @@ export function OnPropertyChange(props: string | string[], config: OnPropertyCha
     };
 }
 
-export const OnChange = OnPropertyChange;
+// This line is here for compatibility with older versions
+export const OnPropertyChange = OnChange;
 
 function normaliseProps(props: string | string[]): string[] {
     if (Array.isArray(props)) {
