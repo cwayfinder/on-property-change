@@ -1,4 +1,4 @@
-# @OnChange
+# @OnPropertyChange
 A Typescript decorator to watch class properties changes
 
 ## Installation
@@ -13,7 +13,7 @@ npm install on-property-change --save
 class Person {
   name: string;
 
-  @OnChange('name')
+  @OnPropertyChange('name')
   doStuff() {
       console.log(`Name has been changed:`, this.name);
   }
@@ -39,7 +39,7 @@ class Person {
   public name: string;
   public age: number;
 
-  @OnChange(['name', 'age'])
+  @OnPropertyChange(['name', 'age'])
   public doStuff() {
       console.log(`${this.name} is ${this.age} years old`);
   }
@@ -64,7 +64,7 @@ class Point {
   public x: number;
   public y: number;
 
-  @OnChange(['x', 'y'], { bulk: true })
+  @OnPropertyChange(['x', 'y'], { bulk: true })
   public move(): void {
     console.log(`Move to ${this.x}:${this.y}`);
   }
@@ -91,17 +91,17 @@ class Person {
   name: string;
   age: number;
 
-  @OnChange('name')
+  @OnPropertyChange('name')
   doStuff() {
       console.log('change name')
   }
 
-  @OnChange('age')
+  @OnPropertyChange('age')
   doStuff2() {
       console.log('change age 1')
   }
 
-  @OnChange('age')
+  @OnPropertyChange('age')
   doStuff3() {
       console.log('change age 2')
   }
@@ -128,7 +128,7 @@ class Person {
   public name: string;
   public age: number;
 
-  @OnChange(['name', 'age'])
+  @OnPropertyChange(['name', 'age'])
   public doStuff(name: string, age: number) {
       console.log(`${name} is ${age} years old`);
   }
@@ -141,7 +141,7 @@ The `history` flag allows you to get the previous value of the property.
 class Person {
   name: string;
 
-  @OnChange('name', { history: true })
+  @OnPropertyChange('name', { history: true })
   doStuff(name: PropertyChange<string>) {
       console.log(`User has changed name from ${name.previousValue} to ${name.currentValue}`);
   }
@@ -179,7 +179,7 @@ export interface PropertyChange<T> {
 export class PersonCardComponent {
     @Input() name: string;
 
-    @OnChange('name')
+    @OnPropertyChange('name')
     doStuff() {
         // do stuff
     }
