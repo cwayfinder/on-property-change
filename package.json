@@ -1,6 +1,6 @@
 {
   "name": "on-property-change",
-  "version": "2.1.0",
+  "version": "2.1.1",
   "description": "A Typescript decorator to watch class properties changes",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
