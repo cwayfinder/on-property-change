@@ -18,6 +18,11 @@ export function OnChange(props: string | string[], config: OnPropertyChangeConfi
             Object.defineProperty(clazz, propertyName, {
                 set(value) {
                     const instance = this;
+
+                    if (value === instance[propertyName]) {
+                        return;
+                    }
+
                     ensureHiddenProps(instance);
                     updateValueCache(instance, propertyName, value);
 
