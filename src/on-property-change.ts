@@ -37,7 +37,11 @@ export function OnChange(props: string | string[], config: OnPropertyChangeConfi
                 get() {
                     const instance = this;
                     if (originalDescriptor) {
-                        return originalDescriptor.get.call(instance);
+                        if ('get' in originalDescriptor) {
+                            return originalDescriptor.get.call(instance);
+                        } else {
+                            return originalDescriptor.value;
+                        }
                     } else {
                         const cache = instance[valuesCacheKey] && instance[valuesCacheKey][propertyName];
                         return cache ? cache.currentValue : undefined;
