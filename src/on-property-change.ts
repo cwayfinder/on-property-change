@@ -47,6 +47,7 @@ export function OnChange(props: string | string[], config: OnPropertyChangeConfi
                         return cache ? cache.currentValue : undefined;
                     }
                 },
+                configurable: true,
             });
         }
     };
